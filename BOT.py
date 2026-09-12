@@ -1,27 +1,37 @@
 import discord
-from generador import gen_pass
-# La variable intents almacena los privilegios del bot
+from discord.ext import commands
+
 intents = discord.Intents.default()
-# Activar el privilegio de lectura de mensajes
 intents.message_content = True
-# Crear un bot en la variable cliente y transferirle los privilegios
-client = discord.Client(intents=intents)
 
-@client.event
+bot = commands.Bot(command_prefix='$', intents=intents)
+
+@bot.event
 async def on_ready():
-    print(f'Hemos iniciado sesión como {client.user}')
+    print(f'We have logged in as {bot.user}')
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('$hello'):
-        await message.channel.send("Hi!")
-    elif message.content.startswith('$bye'):
-        await message.channel.send("\U0001f642")
-    elif message.content.startswith('$password'):
-        await message.channel.send(gen_pass(10)) 
-    else:
-        await message.channel.send(message.content)
+@bot.command()
+async def hello(ctx): #   $hello 
+    await ctx.send(f'Hola, soy un bot {bot.user}!')
 
-client.run("")
+@bot.command()
+async def heh(ctx, count_heh = 5):
+    await ctx.send("he" * count_heh)
+
+@bot.command()
+async def repeat(ctx, times: int, content='repeating...'):
+    """Repeats a message multiple times."""
+    for i in range(times):
+        await ctx.send(content)
+
+@bot.command()
+async def kodland(ctx):  
+    for i in range(3):
+        await ctx.send("Hola, estamos en clase de python PRO")
+
+
+
+
+bot.run("")
+
+
